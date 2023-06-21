@@ -9,11 +9,13 @@ public class PlayerMovement : MonoBehaviour
 
     private CustomInput input;
     private Rigidbody2D playerRigidBody;
+    private GameManager gameManager;
 
     private void Awake()
     {
         input = new CustomInput();
         playerRigidBody = GetComponent<Rigidbody2D>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     private void OnEnable()
@@ -31,5 +33,14 @@ public class PlayerMovement : MonoBehaviour
     private void OnFlapPerformed(InputAction.CallbackContext value)
     {
         playerRigidBody.velocity = Vector2.up * flapStrength;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Pipe"))
+        {
+            gameManager.GameOver();
+            input.Disable();
+        }
     }
 }
